@@ -155,7 +155,7 @@ getProjects =
 
 getProjectConfig : Http.Request (List Project)
 getProjectConfig =
-    Http.get "../res/projects.json" projectDataDecoder
+    Http.get "res/projects.json" projectDataDecoder
 
 
 getProjectDescriptions : List Project -> Cmd Msg
@@ -170,7 +170,7 @@ getProjectDescription : Project -> Task Http.Error String
 getProjectDescription project =
     let
         url =
-            Debug.log "url" ("../res/descriptions/" ++ project.id ++ ".md")
+            Debug.log "url" ("res/descriptions/" ++ project.id ++ ".md")
     in
         Http.toTask (Http.getString url)
 
