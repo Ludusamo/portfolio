@@ -8798,29 +8798,6 @@ var _Ludusamo$portfolio$Main$getProjectDescription = function (project) {
 	return _elm_lang$http$Http$toTask(
 		_elm_lang$http$Http$getString(url));
 };
-var _Ludusamo$portfolio$Main$parseMarkdownHtml = function (htmlString) {
-	return A2(
-		_elm_lang$core$Maybe$withDefault,
-		'',
-		_elm_lang$core$List$head(
-			A2(
-				_elm_lang$core$List$take,
-				1,
-				A2(
-					_elm_lang$core$String$split,
-					'</code>',
-					A2(
-						_elm_lang$core$Maybe$withDefault,
-						'',
-						_elm_lang$core$List$head(
-							A2(
-								_elm_lang$core$List$drop,
-								1,
-								A2(
-									_elm_lang$core$String$split,
-									'<code>',
-									A2(_elm_lang$core$Debug$log, 'raw html', htmlString)))))))));
-};
 var _Ludusamo$portfolio$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
@@ -8914,7 +8891,7 @@ var _Ludusamo$portfolio$Main$update = F2(
 						_elm_lang$core$List$map,
 						_evancz$elm_markdown$Markdown$toHtml(
 							{ctor: '[]'}),
-						A2(_elm_lang$core$List$map, _Ludusamo$portfolio$Main$parseMarkdownHtml, _p0._0._0)));
+						_p0._0._0));
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
