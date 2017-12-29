@@ -8816,7 +8816,10 @@ var _Ludusamo$portfolio$Main$parseMarkdownHtml = function (htmlString) {
 							A2(
 								_elm_lang$core$List$drop,
 								1,
-								A2(_elm_lang$core$String$split, '<code>', htmlString))))))));
+								A2(
+									_elm_lang$core$String$split,
+									'<code>',
+									A2(_elm_lang$core$Debug$log, 'raw html', htmlString)))))))));
 };
 var _Ludusamo$portfolio$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
