@@ -1,10 +1,11 @@
 module Main exposing (..)
 
+import HttpRequest
 import Http
-import Json.Decode exposing (..)
+import Model exposing (Msg, Model, Project)
+import Dict exposing (Dict)
 import Html exposing (Html, button, div, h1, text)
 import Html.Events exposing (onClick)
-import Task exposing (Task)
 import Markdown
 
 
@@ -17,26 +18,10 @@ main =
         }
 
 
-
--- Model
-
-
-type alias Project =
-    { id : String
-    , name : String
-    }
-
-
-type alias Model =
-    { projects : List Project
-    , projectDescriptions : List (Html Msg)
-    }
-
-
 init : ( Model, Cmd Msg )
 init =
-    ( Model [] []
-    , getProjects
+    ( Model [] Dict.empty
+    , HttpRequest.getProjects
     )
 
 
@@ -44,34 +29,29 @@ init =
 -- Update
 
 
-type Msg
-    = LoadingProjects (Result Http.Error (List Project))
-    | LoadingDescriptions (Result Http.Error (List String))
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        LoadingProjects (Ok projects) ->
-            ( { model | projects = projects }, getProjectDescriptions projects )
+        Model.LoadingProjects (Ok projects) ->
+            ( { model | projects = projects }, HttpRequest.getProjectDescriptions projects )
 
-        LoadingProjects (Err err) ->
+        Model.LoadingProjects (Err err) ->
             ( model, Cmd.none )
 
-        LoadingDescriptions (Ok projectDescriptions) ->
+        Model.LoadingDescriptions (Ok projectDescriptions) ->
             let
                 descriptions =
-                    (Debug.log
-                        "Received Descriptions"
-                        (projectDescriptions
-                            |> List.map parseMarkdownHtml
-                            |> List.map (Markdown.toHtml [])
-                        )
-                    )
+                    projectDescriptions
+                        |> List.map (Markdown.toHtml [])
+                        |> List.map2
+                            (,)
+                            (List.map .id model.projects)
+                        |> Dict.fromList
+                        |> Debug.log "Dictionary"
             in
                 ( { model | projectDescriptions = descriptions }, Cmd.none )
 
-        LoadingDescriptions (Err err) ->
+        Model.LoadingDescriptions (Err err) ->
             case err of
                 Http.BadUrl errorMsg ->
                     Debug.log
@@ -117,7 +97,10 @@ view model =
                 projectToDiv
                 model.projects
               )
-            , model.projectDescriptions
+            , [ Maybe.withDefault
+                    (text "Could not find description ang")
+                    (Dict.get "ang" model.projectDescriptions)
+              ]
             ]
         )
 
@@ -129,59 +112,3 @@ view model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
-
-
-
--- Http
-
-
-parseMarkdownHtml : String -> String
-parseMarkdownHtml htmlString =
-    htmlString
-        |> String.split "<code>"
-        |> List.drop 1
-        |> List.head
-        |> Maybe.withDefault ""
-        |> String.split "</code>"
-        |> List.take 1
-        |> List.head
-        |> Maybe.withDefault ""
-
-
-getProjects : Cmd Msg
-getProjects =
-    Http.send LoadingProjects getProjectConfig
-
-
-getProjectConfig : Http.Request (List Project)
-getProjectConfig =
-    Http.get "res/projects.json" projectDataDecoder
-
-
-getProjectDescriptions : List Project -> Cmd Msg
-getProjectDescriptions projects =
-    projects
-        |> List.map getProjectDescription
-        |> Task.sequence
-        |> Task.attempt LoadingDescriptions
-
-
-getProjectDescription : Project -> Task Http.Error String
-getProjectDescription project =
-    let
-        url =
-            Debug.log "url" ("res/descriptions/" ++ project.id ++ ".md")
-    in
-        Http.toTask (Http.getString url)
-
-
-projectDecoder : Decoder Project
-projectDecoder =
-    map2 Project
-        (field "id" string)
-        (field "name" string)
-
-
-projectDataDecoder : Decoder (List Project)
-projectDataDecoder =
-    (list projectDecoder)
