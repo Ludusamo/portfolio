@@ -1,14 +1,23 @@
 [
     {
         "id": "liva",
-        "name": "Locating and Identifying Viable Asteroids"
+        "name": "Locating and Identifying Viable Asteroids",
+        "date": "May 2014 - Nov 2015",
+        "link": "",
+        "description": "Completed for the NASA Epic Challenge. The team created a system capable of being sent to asteroids to determine potential for water content"
     },
     {
         "id": "ang",
-        "name": "Angstrom Lang"
+        "name": "Angstrom Lang",
+        "date": "May 2015 - Present",
+        "link": "",
+        "description": "Multiparadigm language for scripting and easy creation of DSL applications."
     },
     {
         "id": "website",
-        "name": "Personal Website"
+        "name": "Personal Website",
+        "date": "Dec 2014 - Present",
+        "link": "",
+        "description": "Brendan Horng's personal website"
     }
 ]

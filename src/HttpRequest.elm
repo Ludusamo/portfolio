@@ -1,27 +1,29 @@
 module HttpRequest exposing (..)
 
 import Http
-import Model exposing (Model, Msg, Project)
-import Task exposing (Task)
+import Pedestal exposing (Project)
 import Json.Decode as Decode
+import Task exposing (Task)
 
 
-getProjects : Cmd Msg
-getProjects =
-    Http.send Model.LoadingProjects getProjectConfig
+projectDataDecoder : Decode.Decoder (List Project)
+projectDataDecoder =
+    (Decode.list projectDecoder)
+
+
+projectDecoder : Decode.Decoder Project
+projectDecoder =
+    Decode.map5 Project
+        (Decode.field "id" Decode.string)
+        (Decode.field "name" Decode.string)
+        (Decode.field "date" Decode.string)
+        (Decode.field "link" Decode.string)
+        (Decode.field "description" Decode.string)
 
 
 getProjectConfig : Http.Request (List Project)
 getProjectConfig =
     Http.get "/res/projects.json" projectDataDecoder
-
-
-getProjectDescriptions : List Project -> Cmd Msg
-getProjectDescriptions projects =
-    projects
-        |> List.map getProjectDescription
-        |> Task.sequence
-        |> Task.attempt Model.LoadingDescriptions
 
 
 getProjectDescription : Project -> Task Http.Error String
@@ -31,8 +33,3 @@ getProjectDescription project =
             Debug.log "url" ("/res/descriptions/" ++ project.id ++ ".md")
     in
         Http.toTask (Http.getString url)
-
-
-projectDataDecoder : Decode.Decoder (List Project)
-projectDataDecoder =
-    (Decode.list Model.projectDecoder)
