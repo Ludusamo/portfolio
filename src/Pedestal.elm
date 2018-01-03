@@ -19,6 +19,10 @@ type alias Project =
     }
 
 
+emptyProject =
+    Project "" "" "" "" "" ""
+
+
 type alias Model =
     { project : Project
     }
