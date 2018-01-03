@@ -11286,7 +11286,7 @@ var _Ludusamo$portfolio$Pedestal$Model = function (a) {
 var _Ludusamo$portfolio$HttpRequest$getProjectDescription = function (project) {
 	var url = A2(
 		_elm_lang$core$Basics_ops['++'],
-		'/res/descriptions/',
+		'res/descriptions/',
 		A2(_elm_lang$core$Basics_ops['++'], project.id, '.md'));
 	return _elm_lang$http$Http$toTask(
 		_elm_lang$http$Http$getString(url));
@@ -11301,7 +11301,7 @@ var _Ludusamo$portfolio$HttpRequest$projectDecoder = A7(
 	A2(_elm_lang$core$Json_Decode$field, 'thumbnail', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'description', _elm_lang$core$Json_Decode$string));
 var _Ludusamo$portfolio$HttpRequest$projectDataDecoder = _elm_lang$core$Json_Decode$list(_Ludusamo$portfolio$HttpRequest$projectDecoder);
-var _Ludusamo$portfolio$HttpRequest$getProjectConfig = A2(_elm_lang$http$Http$get, '/res/projects.json', _Ludusamo$portfolio$HttpRequest$projectDataDecoder);
+var _Ludusamo$portfolio$HttpRequest$getProjectConfig = A2(_elm_lang$http$Http$get, 'res/projects.json', _Ludusamo$portfolio$HttpRequest$projectDataDecoder);
 var _evancz$elm_markdown$Native_Markdown = function() {
 
 
