@@ -89,7 +89,7 @@ update msg model =
 
                 Http.BadStatus status ->
                     Debug.log
-                        status.body
+                        status
                         ( model, Cmd.none )
 
                 Http.BadPayload status res ->
@@ -128,7 +128,7 @@ update msg model =
 
                 Http.BadStatus status ->
                     Debug.log
-                        status.body
+                        status
                         ( model, Cmd.none )
 
                 Http.BadPayload status res ->
