@@ -24,13 +24,13 @@ projectDecoder =
 
 getProjectConfig : Http.Request (List Project)
 getProjectConfig =
-    Http.get "/res/projects.json" projectDataDecoder
+    Http.get "res/projects.json" projectDataDecoder
 
 
 getProjectDescription : Project -> Task Http.Error String
 getProjectDescription project =
     let
         url =
-            "/res/descriptions/" ++ project.id ++ ".md"
+            "res/descriptions/" ++ project.id ++ ".md"
     in
         Http.toTask (Http.getString url)
