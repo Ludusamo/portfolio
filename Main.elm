@@ -2,11 +2,19 @@ module Main exposing (..)
 
 import HttpRequest
 import Http
-import Model exposing (Msg, Model, Project)
+import Pedestal exposing (Project)
 import Dict exposing (Dict)
 import Html exposing (Html, button, div, h1, text)
 import Html.Events exposing (onClick)
 import Markdown
+import Task exposing (Task)
+import Json.Decode as Decode
+import Bootstrap.CDN as CDN
+import Bootstrap.Grid as Grid
+import Bootstrap.Grid.Row as Row
+import Bootstrap.Grid.Col as Col
+import Util.List as ListUtil
+import Bootstrap.Card as Card
 
 
 main =
@@ -20,25 +28,52 @@ main =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model [] Dict.empty
-    , HttpRequest.getProjects
+    ( Model [] [] Dict.empty
+    , getProjects
     )
+
+
+
+-- Model
+
+
+type alias Model =
+    { projects : List Project
+    , pedestals : List Pedestal.Model
+    , projectDescriptions : Dict String (Html Msg)
+    }
 
 
 
 -- Update
 
 
+type Msg
+    = LoadingProjects (Result Http.Error (List Project))
+    | LoadingDescriptions (Result Http.Error (List String))
+    | PedestalClick Pedestal.Model
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Model.LoadingProjects (Ok projects) ->
-            ( { model | projects = projects }, HttpRequest.getProjectDescriptions projects )
+        LoadingProjects (Ok projects) ->
+            let
+                pedestals =
+                    projects
+                        |> List.map (\project -> Pedestal.Model project)
+            in
+                ( { model
+                    | pedestals = pedestals
+                    , projects = projects
+                  }
+                , getProjectDescriptions projects
+                )
 
-        Model.LoadingProjects (Err err) ->
+        LoadingProjects (Err err) ->
             ( model, Cmd.none )
 
-        Model.LoadingDescriptions (Ok projectDescriptions) ->
+        LoadingDescriptions (Ok projectDescriptions) ->
             let
                 descriptions =
                     projectDescriptions
@@ -47,11 +82,10 @@ update msg model =
                             (,)
                             (List.map .id model.projects)
                         |> Dict.fromList
-                        |> Debug.log "Dictionary"
             in
                 ( { model | projectDescriptions = descriptions }, Cmd.none )
 
-        Model.LoadingDescriptions (Err err) ->
+        LoadingDescriptions (Err err) ->
             case err of
                 Http.BadUrl errorMsg ->
                     Debug.log
@@ -78,6 +112,13 @@ update msg model =
                         status
                         ( model, Cmd.none )
 
+        PedestalClick pedestal ->
+            let
+                x =
+                    Debug.log "Pedestal clicked" pedestal
+            in
+                ( model, Cmd.none )
+
 
 
 -- View
@@ -90,19 +131,45 @@ projectToDiv project =
 
 view : Model -> Html Msg
 view model =
-    div []
-        (List.concat
-            [ [ h1 [] [ text "Portfolio" ] ]
-            , (List.map
-                projectToDiv
-                model.projects
-              )
-            , [ Maybe.withDefault
-                    (text "Could not find description ang")
-                    (Dict.get "ang" model.projectDescriptions)
-              ]
+    Grid.container
+        []
+        ([ CDN.stylesheet
+         , Grid.simpleRow
+            [ Grid.col
+                []
+                [ h1 [] [ text "Portfolio" ] ]
             ]
+         ]
+            ++ (model.pedestals
+                    |> ListUtil.group 3
+                    |> List.map
+                        (\group ->
+                            (group
+                                |> List.map
+                                    (\pedestal ->
+                                        (Pedestal.card
+                                            (pedestalConfig pedestal)
+                                            pedestal
+                                        )
+                                    )
+                            )
+                        )
+                    |> List.map Card.deck
+                    |> List.map
+                        (\deck ->
+                            Grid.simpleRow
+                                [ Grid.col
+                                    [ Col.attrs [], Col.xs12 ]
+                                    [ deck ]
+                                ]
+                        )
+               )
         )
+
+
+pedestalConfig : Pedestal.Model -> Card.Config Msg
+pedestalConfig pedestal =
+    Card.config [ Card.attrs [ onClick (PedestalClick pedestal) ] ]
 
 
 
@@ -112,3 +179,20 @@ view model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
+
+
+
+-- Http
+
+
+getProjects : Cmd Msg
+getProjects =
+    Http.send LoadingProjects HttpRequest.getProjectConfig
+
+
+getProjectDescriptions : List Project -> Cmd Msg
+getProjectDescriptions projects =
+    projects
+        |> List.map HttpRequest.getProjectDescription
+        |> Task.sequence
+        |> Task.attempt LoadingDescriptions
