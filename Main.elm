@@ -51,6 +51,7 @@ type alias Model =
 type Msg
     = LoadingProjects (Result Http.Error (List Project))
     | LoadingDescriptions (Result Http.Error (List String))
+    | PedestalClick Pedestal.Model
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -81,7 +82,6 @@ update msg model =
                             (,)
                             (List.map .id model.projects)
                         |> Dict.fromList
-                        |> Debug.log "Dictionary"
             in
                 ( { model | projectDescriptions = descriptions }, Cmd.none )
 
@@ -112,6 +112,13 @@ update msg model =
                         status
                         ( model, Cmd.none )
 
+        PedestalClick pedestal ->
+            let
+                x =
+                    Debug.log "Pedestal clicked" pedestal
+            in
+                ( model, Cmd.none )
+
 
 
 -- View
@@ -140,7 +147,10 @@ view model =
                             (group
                                 |> List.map
                                     (\pedestal ->
-                                        Pedestal.card pedestal
+                                        (Pedestal.card
+                                            (pedestalConfig pedestal)
+                                            pedestal
+                                        )
                                     )
                             )
                         )
@@ -155,6 +165,11 @@ view model =
                         )
                )
         )
+
+
+pedestalConfig : Pedestal.Model -> Card.Config Msg
+pedestalConfig pedestal =
+    Card.config [ Card.attrs [ onClick (PedestalClick pedestal) ] ]
 
 
 

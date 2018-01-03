@@ -13,11 +13,12 @@ projectDataDecoder =
 
 projectDecoder : Decode.Decoder Project
 projectDecoder =
-    Decode.map5 Project
+    Decode.map6 Project
         (Decode.field "id" Decode.string)
         (Decode.field "name" Decode.string)
         (Decode.field "date" Decode.string)
         (Decode.field "link" Decode.string)
+        (Decode.field "thumbnail" Decode.string)
         (Decode.field "description" Decode.string)
 
 

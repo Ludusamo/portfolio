@@ -12,9 +12,9 @@ group : Int -> List a -> List (List a)
 group n list =
     let
         grouping =
-            (Debug.log "Sub group" (List.take n list))
+            (List.take n list)
     in
-        if (Debug.log "List length" (List.length list)) < n then
+        if (List.length list) < n then
             [ grouping ]
         else
             (grouping :: (group n (List.drop n list)))

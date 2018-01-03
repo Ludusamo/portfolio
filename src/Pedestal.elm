@@ -14,6 +14,7 @@ type alias Project =
     , name : String
     , date : String
     , link : String
+    , thumbnail : String
     , description : String
     }
 
@@ -24,35 +25,13 @@ type alias Model =
 
 
 
--- Update
-
-
-type Msg
-    = Clicked Model
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        Clicked pedestal ->
-            let
-                irr =
-                    (Debug.log
-                        "Pedestal clicked"
-                        pedestal
-                    )
-            in
-                ( model, Cmd.none )
-
-
-
 -- View
 
 
-card : Model -> Card.Config msg
-card model =
-    Card.config [ Card.attrs [] ]
-        |> Card.imgTop [ src "http://via.placeholder.com/300" ] []
+card : Card.Config msg -> Model -> Card.Config msg
+card config model =
+    config
+        |> Card.imgTop [ src model.project.thumbnail ] []
         |> Card.footer [] [ text model.project.date ]
         |> Card.block []
             [ Card.titleH4 [] [ text model.project.name ]
