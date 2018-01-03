@@ -31,6 +31,6 @@ getProjectDescription : Project -> Task Http.Error String
 getProjectDescription project =
     let
         url =
-            Debug.log "url" ("/res/descriptions/" ++ project.id ++ ".md")
+            "/res/descriptions/" ++ project.id ++ ".md"
     in
         Http.toTask (Http.getString url)

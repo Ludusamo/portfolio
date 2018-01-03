@@ -36,8 +36,4 @@ card config model =
         |> Card.block []
             [ Card.titleH4 [] [ text model.project.name ]
             , Card.text [] [ text model.project.description ]
-            , (Card.link
-                [ href ("#" ++ model.project.link) ]
-                [ text "Project Link" ]
-              )
             ]
