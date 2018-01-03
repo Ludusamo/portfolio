@@ -71,7 +71,31 @@ update msg model =
                 )
 
         LoadingProjects (Err err) ->
-            ( model, Cmd.none )
+            case err of
+                Http.BadUrl errorMsg ->
+                    Debug.log
+                        errorMsg
+                        ( model, Cmd.none )
+
+                Http.Timeout ->
+                    Debug.log
+                        "Timeout"
+                        ( model, Cmd.none )
+
+                Http.NetworkError ->
+                    Debug.log
+                        "NetworkError"
+                        ( model, Cmd.none )
+
+                Http.BadStatus status ->
+                    Debug.log
+                        status.body
+                        ( model, Cmd.none )
+
+                Http.BadPayload status res ->
+                    Debug.log
+                        status
+                        ( model, Cmd.none )
 
         LoadingDescriptions (Ok projectDescriptions) ->
             let

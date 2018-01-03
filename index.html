@@ -12057,7 +12057,34 @@ var _Ludusamo$portfolio$Main$update = F2(
 						_1: _Ludusamo$portfolio$Main$getProjectDescriptions(_p1)
 					};
 				} else {
-					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					var _p2 = _p0._0._0;
+					switch (_p2.ctor) {
+						case 'BadUrl':
+							return A2(
+								_elm_lang$core$Debug$log,
+								_p2._0,
+								{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none});
+						case 'Timeout':
+							return A2(
+								_elm_lang$core$Debug$log,
+								'Timeout',
+								{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none});
+						case 'NetworkError':
+							return A2(
+								_elm_lang$core$Debug$log,
+								'NetworkError',
+								{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none});
+						case 'BadStatus':
+							return A2(
+								_elm_lang$core$Debug$log,
+								_p2._0.body,
+								{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none});
+						default:
+							return A2(
+								_elm_lang$core$Debug$log,
+								_p2._0,
+								{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none});
+					}
 				}
 			case 'LoadingDescriptions':
 				if (_p0._0.ctor === 'Ok') {
@@ -12087,12 +12114,12 @@ var _Ludusamo$portfolio$Main$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				} else {
-					var _p2 = _p0._0._0;
-					switch (_p2.ctor) {
+					var _p3 = _p0._0._0;
+					switch (_p3.ctor) {
 						case 'BadUrl':
 							return A2(
 								_elm_lang$core$Debug$log,
-								_p2._0,
+								_p3._0,
 								{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none});
 						case 'Timeout':
 							return A2(
@@ -12107,12 +12134,12 @@ var _Ludusamo$portfolio$Main$update = F2(
 						case 'BadStatus':
 							return A2(
 								_elm_lang$core$Debug$log,
-								_p2._0.body,
+								_p3._0.body,
 								{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none});
 						default:
 							return A2(
 								_elm_lang$core$Debug$log,
-								_p2._0,
+								_p3._0,
 								{ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none});
 					}
 				}
