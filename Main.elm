@@ -15,6 +15,8 @@ import Bootstrap.Grid.Row as Row
 import Bootstrap.Grid.Col as Col
 import Util.List as ListUtil
 import Bootstrap.Card as Card
+import Bootstrap.Modal as Modal
+import Bootstrap.Button as Button
 
 
 main =
@@ -28,7 +30,7 @@ main =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model [] [] Dict.empty
+    ( Model [] [] Pedestal.emptyProject Modal.hiddenState Dict.empty
     , getProjects
     )
 
@@ -40,6 +42,8 @@ init =
 type alias Model =
     { projects : List Project
     , pedestals : List Pedestal.Model
+    , selectedProject : Project
+    , descriptionState : Modal.State
     , projectDescriptions : Dict String (Html Msg)
     }
 
@@ -52,6 +56,7 @@ type Msg
     = LoadingProjects (Result Http.Error (List Project))
     | LoadingDescriptions (Result Http.Error (List String))
     | PedestalClick Pedestal.Model
+    | ModalMsg Modal.State
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -137,11 +142,11 @@ update msg model =
                         ( model, Cmd.none )
 
         PedestalClick pedestal ->
-            let
-                x =
-                    Debug.log "Pedestal clicked" pedestal
-            in
-                ( model, Cmd.none )
+            { model | selectedProject = pedestal.project }
+                |> update (ModalMsg Modal.visibleState)
+
+        ModalMsg state ->
+            ( { model | descriptionState = state }, Cmd.none )
 
 
 
@@ -155,14 +160,14 @@ projectToDiv project =
 
 view : Model -> Html Msg
 view model =
-    Grid.container
-        []
+    Grid.container []
         ([ CDN.stylesheet
          , Grid.simpleRow
             [ Grid.col
                 []
                 [ h1 [] [ text "Portfolio" ] ]
             ]
+         , descriptionModal model
          ]
             ++ (model.pedestals
                     |> ListUtil.group 3
@@ -189,6 +194,33 @@ view model =
                         )
                )
         )
+
+
+descriptionModal : Model -> Html Msg
+descriptionModal model =
+    Modal.config ModalMsg
+        |> Modal.large
+        |> Modal.h5 [] [ text model.selectedProject.name ]
+        |> Modal.body []
+            [ let
+                description =
+                    Maybe.withDefault
+                        (div [] [])
+                        (Dict.get
+                            model.selectedProject.id
+                            model.projectDescriptions
+                        )
+              in
+                description
+            ]
+        |> Modal.footer []
+            [ Button.button
+                [ Button.outlinePrimary
+                , Button.attrs [ onClick <| ModalMsg Modal.hiddenState ]
+                ]
+                [ text "Close" ]
+            ]
+        |> Modal.view model.descriptionState
 
 
 pedestalConfig : Pedestal.Model -> Card.Config Msg
