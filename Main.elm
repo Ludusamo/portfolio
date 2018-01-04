@@ -17,6 +17,8 @@ import Util.List as ListUtil
 import Bootstrap.Card as Card
 import Bootstrap.Modal as Modal
 import Bootstrap.Button as Button
+import Bootstrap.Carousel as Carousel
+import Bootstrap.Carousel.Slide as Slide
 
 
 main =
@@ -30,7 +32,13 @@ main =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model [] [] Pedestal.emptyProject Modal.hiddenState Dict.empty
+    ( Model
+        []
+        []
+        Pedestal.emptyProject
+        Modal.hiddenState
+        Carousel.initialState
+        Dict.empty
     , getProjects
     )
 
@@ -44,6 +52,7 @@ type alias Model =
     , pedestals : List Pedestal.Model
     , selectedProject : Project
     , descriptionState : Modal.State
+    , projectCarousel : Carousel.State
     , projectDescriptions : Dict String (Html Msg)
     }
 
@@ -57,6 +66,7 @@ type Msg
     | LoadingDescriptions (Result Http.Error (List String))
     | PedestalClick Pedestal.Model
     | ModalMsg Modal.State
+    | CarouselMsg Carousel.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -142,11 +152,22 @@ update msg model =
                         ( model, Cmd.none )
 
         PedestalClick pedestal ->
-            { model | selectedProject = pedestal.project }
+            { model
+                | selectedProject = pedestal.project
+                , projectCarousel = Carousel.initialState
+            }
                 |> update (ModalMsg Modal.visibleState)
 
         ModalMsg state ->
             ( { model | descriptionState = state }, Cmd.none )
+
+        CarouselMsg subMsg ->
+            ( { model
+                | projectCarousel =
+                    Carousel.update subMsg model.projectCarousel
+              }
+            , Cmd.none
+            )
 
 
 
@@ -202,7 +223,8 @@ descriptionModal model =
         |> Modal.large
         |> Modal.h5 [] [ text model.selectedProject.name ]
         |> Modal.body []
-            [ let
+            [ projectCarousel model
+            , let
                 description =
                     Maybe.withDefault
                         (div [] [])
@@ -213,14 +235,19 @@ descriptionModal model =
               in
                 description
             ]
-        |> Modal.footer []
-            [ Button.button
-                [ Button.outlinePrimary
-                , Button.attrs [ onClick <| ModalMsg Modal.hiddenState ]
-                ]
-                [ text "Close" ]
-            ]
         |> Modal.view model.descriptionState
+
+
+projectCarousel : Model -> Html Msg
+projectCarousel model =
+    Carousel.config CarouselMsg []
+        |> Carousel.withIndicators
+        |> Carousel.slides
+            (List.map
+                (\imgLink -> Slide.config [] (Slide.image [] imgLink))
+                model.selectedProject.carousel
+            )
+        |> Carousel.view model.projectCarousel
 
 
 pedestalConfig : Pedestal.Model -> Card.Config Msg
@@ -234,7 +261,7 @@ pedestalConfig pedestal =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Carousel.subscriptions model.projectCarousel CarouselMsg
 
 
 
