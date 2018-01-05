@@ -11276,13 +11276,12 @@ var _Ludusamo$portfolio$Pedestal$card = F2(
 					{ctor: '[]'},
 					config)));
 	});
-var _Ludusamo$portfolio$Pedestal$Project = F7(
-	function (a, b, c, d, e, f, g) {
-		return {id: a, name: b, date: c, link: d, thumbnail: e, carousel: f, description: g};
+var _Ludusamo$portfolio$Pedestal$Project = F6(
+	function (a, b, c, d, e, f) {
+		return {id: a, name: b, date: c, thumbnail: d, carousel: e, description: f};
 	});
-var _Ludusamo$portfolio$Pedestal$emptyProject = A7(
+var _Ludusamo$portfolio$Pedestal$emptyProject = A6(
 	_Ludusamo$portfolio$Pedestal$Project,
-	'',
 	'',
 	'',
 	'',
@@ -11304,13 +11303,12 @@ var _Ludusamo$portfolio$HttpRequest$getProjectDescription = function (project) {
 	return _elm_lang$http$Http$toTask(
 		_elm_lang$http$Http$getString(url));
 };
-var _Ludusamo$portfolio$HttpRequest$projectDecoder = A8(
-	_elm_lang$core$Json_Decode$map7,
+var _Ludusamo$portfolio$HttpRequest$projectDecoder = A7(
+	_elm_lang$core$Json_Decode$map6,
 	_Ludusamo$portfolio$Pedestal$Project,
 	A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'date', _elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode$field, 'link', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'thumbnail', _elm_lang$core$Json_Decode$string),
 	A2(
 		_elm_lang$core$Json_Decode$field,
