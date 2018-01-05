@@ -15,12 +15,13 @@ type alias Project =
     , date : String
     , link : String
     , thumbnail : String
+    , carousel : List String
     , description : String
     }
 
 
 emptyProject =
-    Project "" "" "" "" "" ""
+    Project "" "" "" "" "" [ "" ] ""
 
 
 type alias Model =
