@@ -13,7 +13,6 @@ type alias Project =
     { id : String
     , name : String
     , date : String
-    , link : String
     , thumbnail : String
     , carousel : List String
     , description : String
@@ -21,7 +20,7 @@ type alias Project =
 
 
 emptyProject =
-    Project "" "" "" "" "" [ "" ] ""
+    Project "" "" "" "" [ "" ] ""
 
 
 type alias Model =
