@@ -11276,11 +11276,23 @@ var _Ludusamo$portfolio$Pedestal$card = F2(
 					{ctor: '[]'},
 					config)));
 	});
-var _Ludusamo$portfolio$Pedestal$Project = F6(
-	function (a, b, c, d, e, f) {
-		return {id: a, name: b, date: c, link: d, thumbnail: e, description: f};
+var _Ludusamo$portfolio$Pedestal$Project = F7(
+	function (a, b, c, d, e, f, g) {
+		return {id: a, name: b, date: c, link: d, thumbnail: e, carousel: f, description: g};
 	});
-var _Ludusamo$portfolio$Pedestal$emptyProject = A6(_Ludusamo$portfolio$Pedestal$Project, '', '', '', '', '', '');
+var _Ludusamo$portfolio$Pedestal$emptyProject = A7(
+	_Ludusamo$portfolio$Pedestal$Project,
+	'',
+	'',
+	'',
+	'',
+	'',
+	{
+		ctor: '::',
+		_0: '',
+		_1: {ctor: '[]'}
+	},
+	'');
 var _Ludusamo$portfolio$Pedestal$Model = function (a) {
 	return {project: a};
 };
@@ -11292,14 +11304,18 @@ var _Ludusamo$portfolio$HttpRequest$getProjectDescription = function (project) {
 	return _elm_lang$http$Http$toTask(
 		_elm_lang$http$Http$getString(url));
 };
-var _Ludusamo$portfolio$HttpRequest$projectDecoder = A7(
-	_elm_lang$core$Json_Decode$map6,
+var _Ludusamo$portfolio$HttpRequest$projectDecoder = A8(
+	_elm_lang$core$Json_Decode$map7,
 	_Ludusamo$portfolio$Pedestal$Project,
 	A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'date', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'link', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'thumbnail', _elm_lang$core$Json_Decode$string),
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'carousel',
+		_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)),
 	A2(_elm_lang$core$Json_Decode$field, 'description', _elm_lang$core$Json_Decode$string));
 var _Ludusamo$portfolio$HttpRequest$projectDataDecoder = _elm_lang$core$Json_Decode$list(_Ludusamo$portfolio$HttpRequest$projectDecoder);
 var _Ludusamo$portfolio$HttpRequest$getProjectConfig = A2(_elm_lang$http$Http$get, 'res/projects.json', _Ludusamo$portfolio$HttpRequest$projectDataDecoder);
@@ -12592,8 +12608,912 @@ var _rundis$elm_bootstrap$Bootstrap_Button$button = F2(
 			_rundis$elm_bootstrap$Bootstrap_Internal_Button$buttonAttributes(options),
 			children);
 	});
-var _Ludusamo$portfolio$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$none;
+var _rundis$elm_bootstrap$Bootstrap_Carousel_SlideInternal$view = function (_p0) {
+	var _p1 = _p0;
+	var captionHtml = function () {
+		var _p2 = _p1._0.caption;
+		if (_p2.ctor === 'Nothing') {
+			return _elm_lang$html$Html$text('');
+		} else {
+			return A2(
+				_elm_lang$html$Html$div,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_p2._0.attributes,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('carousel-caption d-none d-md-block'),
+						_1: {ctor: '[]'}
+					}),
+				_p2._0.children);
+		}
+	}();
+	return A2(
+		_elm_lang$html$Html$div,
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_p1._0.attributes,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('carousel-item'),
+				_1: {ctor: '[]'}
+			}),
+		function () {
+			var _p3 = _p1._0.content;
+			if (_p3.ctor === 'Image') {
+				return {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$img,
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_p3._0.attributes,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('d-block img-fluid'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$src(_p3._0.src),
+									_1: {ctor: '[]'}
+								}
+							}),
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: captionHtml,
+						_1: {ctor: '[]'}
+					}
+				};
+			} else {
+				return {
+					ctor: '::',
+					_0: _p3._0.html,
+					_1: {
+						ctor: '::',
+						_0: captionHtml,
+						_1: {ctor: '[]'}
+					}
+				};
+			}
+		}());
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel_SlideInternal$Config = function (a) {
+	return {ctor: 'Config', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel_SlideInternal$addAttributes = F2(
+	function (newAttributes, _p4) {
+		var _p5 = _p4;
+		var _p6 = _p5._0;
+		return _rundis$elm_bootstrap$Bootstrap_Carousel_SlideInternal$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p6,
+				{
+					attributes: A2(_elm_lang$core$Basics_ops['++'], _p6.attributes, newAttributes)
+				}));
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel_SlideInternal$Custom = function (a) {
+	return {ctor: 'Custom', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel_SlideInternal$Image = function (a) {
+	return {ctor: 'Image', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel_Slide$customContent = function (html) {
+	return _rundis$elm_bootstrap$Bootstrap_Carousel_SlideInternal$Custom(
+		{html: html});
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel_Slide$image = F2(
+	function (attributes, src) {
+		return _rundis$elm_bootstrap$Bootstrap_Carousel_SlideInternal$Image(
+			{attributes: attributes, src: src});
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel_Slide$caption = F3(
+	function (attributes, children, _p0) {
+		var _p1 = _p0;
+		return _rundis$elm_bootstrap$Bootstrap_Carousel_SlideInternal$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p1._0,
+				{
+					caption: _elm_lang$core$Maybe$Just(
+						{attributes: attributes, children: children})
+				}));
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel_Slide$config = F2(
+	function (attributes, content) {
+		return _rundis$elm_bootstrap$Bootstrap_Carousel_SlideInternal$Config(
+			{attributes: attributes, content: content, caption: _elm_lang$core$Maybe$Nothing});
+	});
+var _elm_lang$animation_frame$Native_AnimationFrame = function()
+{
+
+function create()
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		var id = requestAnimationFrame(function() {
+			callback(_elm_lang$core$Native_Scheduler.succeed(Date.now()));
+		});
+
+		return function() {
+			cancelAnimationFrame(id);
+		};
+	});
+}
+
+return {
+	create: create
+};
+
+}();
+var _elm_lang$core$Process$kill = _elm_lang$core$Native_Scheduler.kill;
+var _elm_lang$core$Process$sleep = _elm_lang$core$Native_Scheduler.sleep;
+var _elm_lang$core$Process$spawn = _elm_lang$core$Native_Scheduler.spawn;
+var _elm_lang$animation_frame$AnimationFrame$rAF = _elm_lang$animation_frame$Native_AnimationFrame.create(
+	{ctor: '_Tuple0'});
+var _elm_lang$animation_frame$AnimationFrame$subscription = _elm_lang$core$Native_Platform.leaf('AnimationFrame');
+var _elm_lang$animation_frame$AnimationFrame$State = F3(
+	function (a, b, c) {
+		return {subs: a, request: b, oldTime: c};
+	});
+var _elm_lang$animation_frame$AnimationFrame$init = _elm_lang$core$Task$succeed(
+	A3(
+		_elm_lang$animation_frame$AnimationFrame$State,
+		{ctor: '[]'},
+		_elm_lang$core$Maybe$Nothing,
+		0));
+var _elm_lang$animation_frame$AnimationFrame$onEffects = F3(
+	function (router, subs, _p0) {
+		var _p1 = _p0;
+		var _p5 = _p1.request;
+		var _p4 = _p1.oldTime;
+		var _p2 = {ctor: '_Tuple2', _0: _p5, _1: subs};
+		if (_p2._0.ctor === 'Nothing') {
+			if (_p2._1.ctor === '[]') {
+				return _elm_lang$core$Task$succeed(
+					A3(
+						_elm_lang$animation_frame$AnimationFrame$State,
+						{ctor: '[]'},
+						_elm_lang$core$Maybe$Nothing,
+						_p4));
+			} else {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (pid) {
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (time) {
+								return _elm_lang$core$Task$succeed(
+									A3(
+										_elm_lang$animation_frame$AnimationFrame$State,
+										subs,
+										_elm_lang$core$Maybe$Just(pid),
+										time));
+							},
+							_elm_lang$core$Time$now);
+					},
+					_elm_lang$core$Process$spawn(
+						A2(
+							_elm_lang$core$Task$andThen,
+							_elm_lang$core$Platform$sendToSelf(router),
+							_elm_lang$animation_frame$AnimationFrame$rAF)));
+			}
+		} else {
+			if (_p2._1.ctor === '[]') {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (_p3) {
+						return _elm_lang$core$Task$succeed(
+							A3(
+								_elm_lang$animation_frame$AnimationFrame$State,
+								{ctor: '[]'},
+								_elm_lang$core$Maybe$Nothing,
+								_p4));
+					},
+					_elm_lang$core$Process$kill(_p2._0._0));
+			} else {
+				return _elm_lang$core$Task$succeed(
+					A3(_elm_lang$animation_frame$AnimationFrame$State, subs, _p5, _p4));
+			}
+		}
+	});
+var _elm_lang$animation_frame$AnimationFrame$onSelfMsg = F3(
+	function (router, newTime, _p6) {
+		var _p7 = _p6;
+		var _p10 = _p7.subs;
+		var diff = newTime - _p7.oldTime;
+		var send = function (sub) {
+			var _p8 = sub;
+			if (_p8.ctor === 'Time') {
+				return A2(
+					_elm_lang$core$Platform$sendToApp,
+					router,
+					_p8._0(newTime));
+			} else {
+				return A2(
+					_elm_lang$core$Platform$sendToApp,
+					router,
+					_p8._0(diff));
+			}
+		};
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (pid) {
+				return A2(
+					_elm_lang$core$Task$andThen,
+					function (_p9) {
+						return _elm_lang$core$Task$succeed(
+							A3(
+								_elm_lang$animation_frame$AnimationFrame$State,
+								_p10,
+								_elm_lang$core$Maybe$Just(pid),
+								newTime));
+					},
+					_elm_lang$core$Task$sequence(
+						A2(_elm_lang$core$List$map, send, _p10)));
+			},
+			_elm_lang$core$Process$spawn(
+				A2(
+					_elm_lang$core$Task$andThen,
+					_elm_lang$core$Platform$sendToSelf(router),
+					_elm_lang$animation_frame$AnimationFrame$rAF)));
+	});
+var _elm_lang$animation_frame$AnimationFrame$Diff = function (a) {
+	return {ctor: 'Diff', _0: a};
+};
+var _elm_lang$animation_frame$AnimationFrame$diffs = function (tagger) {
+	return _elm_lang$animation_frame$AnimationFrame$subscription(
+		_elm_lang$animation_frame$AnimationFrame$Diff(tagger));
+};
+var _elm_lang$animation_frame$AnimationFrame$Time = function (a) {
+	return {ctor: 'Time', _0: a};
+};
+var _elm_lang$animation_frame$AnimationFrame$times = function (tagger) {
+	return _elm_lang$animation_frame$AnimationFrame$subscription(
+		_elm_lang$animation_frame$AnimationFrame$Time(tagger));
+};
+var _elm_lang$animation_frame$AnimationFrame$subMap = F2(
+	function (func, sub) {
+		var _p11 = sub;
+		if (_p11.ctor === 'Time') {
+			return _elm_lang$animation_frame$AnimationFrame$Time(
+				function (_p12) {
+					return func(
+						_p11._0(_p12));
+				});
+		} else {
+			return _elm_lang$animation_frame$AnimationFrame$Diff(
+				function (_p13) {
+					return func(
+						_p11._0(_p13));
+				});
+		}
+	});
+_elm_lang$core$Native_Platform.effectManagers['AnimationFrame'] = {pkg: 'elm-lang/animation-frame', init: _elm_lang$animation_frame$AnimationFrame$init, onEffects: _elm_lang$animation_frame$AnimationFrame$onEffects, onSelfMsg: _elm_lang$animation_frame$AnimationFrame$onSelfMsg, tag: 'sub', subMap: _elm_lang$animation_frame$AnimationFrame$subMap};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$transitionClassNames = F2(
+	function (currentIndex, transition) {
+		var base = 'carousel-item';
+		var leftNext = {
+			directionalClassName: A2(_elm_lang$core$Basics_ops['++'], base, '-left'),
+			orderClassName: A2(_elm_lang$core$Basics_ops['++'], base, '-next')
+		};
+		var rightPrev = {
+			directionalClassName: A2(_elm_lang$core$Basics_ops['++'], base, '-right'),
+			orderClassName: A2(_elm_lang$core$Basics_ops['++'], base, '-prev')
+		};
+		var _p0 = transition;
+		switch (_p0.ctor) {
+			case 'Next':
+				return leftNext;
+			case 'Number':
+				return (_elm_lang$core$Native_Utils.cmp(_p0._0, currentIndex) > 0) ? leftNext : rightPrev;
+			default:
+				return rightPrev;
+		}
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$transitionClasses = F4(
+	function (index, currentIndex, newIndex, tstage) {
+		if (_elm_lang$core$Native_Utils.eq(index, currentIndex)) {
+			var _p1 = tstage;
+			switch (_p1.ctor) {
+				case 'NotAnimating':
+					return {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'active', _1: true},
+						_1: {ctor: '[]'}
+					};
+				case 'Start':
+					return {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'active', _1: true},
+						_1: {ctor: '[]'}
+					};
+				default:
+					var _p2 = A2(_rundis$elm_bootstrap$Bootstrap_Carousel$transitionClassNames, currentIndex, _p1._0);
+					var directionalClassName = _p2.directionalClassName;
+					return {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'active', _1: true},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: directionalClassName, _1: true},
+							_1: {ctor: '[]'}
+						}
+					};
+			}
+		} else {
+			if (_elm_lang$core$Native_Utils.eq(index, newIndex)) {
+				var _p3 = tstage;
+				switch (_p3.ctor) {
+					case 'NotAnimating':
+						return {ctor: '[]'};
+					case 'Start':
+						return {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: function (_) {
+									return _.orderClassName;
+								}(
+									A2(_rundis$elm_bootstrap$Bootstrap_Carousel$transitionClassNames, currentIndex, _p3._0)),
+								_1: true
+							},
+							_1: {ctor: '[]'}
+						};
+					default:
+						var _p4 = A2(_rundis$elm_bootstrap$Bootstrap_Carousel$transitionClassNames, currentIndex, _p3._0);
+						var directionalClassName = _p4.directionalClassName;
+						var orderClassName = _p4.orderClassName;
+						return {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: directionalClassName, _1: true},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: orderClassName, _1: true},
+								_1: {ctor: '[]'}
+							}
+						};
+				}
+			} else {
+				return {ctor: '[]'};
+			}
+		}
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$nextIndex = F3(
+	function (stage, currentIndex, size) {
+		var helper = function (transition) {
+			var _p5 = transition;
+			switch (_p5.ctor) {
+				case 'Next':
+					return A2(_elm_lang$core$Basics_ops['%'], currentIndex + 1, size);
+				case 'Prev':
+					return A2(_elm_lang$core$Basics_ops['%'], currentIndex - 1, size);
+				default:
+					return A2(_elm_lang$core$Basics_ops['%'], _p5._0, size);
+			}
+		};
+		var _p6 = stage;
+		switch (_p6.ctor) {
+			case 'Start':
+				return helper(_p6._0);
+			case 'Animating':
+				return helper(_p6._0);
+			default:
+				return currentIndex;
+		}
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$viewSlide = F3(
+	function (_p7, index, slide) {
+		var _p8 = _p7;
+		var _p10 = _p8._0;
+		var _p9 = _p8._1.currentIndex;
+		var newIndex = A3(_rundis$elm_bootstrap$Bootstrap_Carousel$nextIndex, _p10, _p9, _p8._1.size);
+		return _rundis$elm_bootstrap$Bootstrap_Carousel_SlideInternal$view(
+			A2(
+				_rundis$elm_bootstrap$Bootstrap_Carousel_SlideInternal$addAttributes,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$classList(
+						A4(_rundis$elm_bootstrap$Bootstrap_Carousel$transitionClasses, index, _p9, newIndex, _p10)),
+					_1: {ctor: '[]'}
+				},
+				slide));
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$StateSettings = F7(
+	function (a, b, c, d, e, f, g) {
+		return {currentIndex: a, cycling: b, interval: c, hovering: d, keyboard: e, wrap: f, size: g};
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$StateOptions = F6(
+	function (a, b, c, d, e, f) {
+		return {interval: a, keyboard: b, pauseOnHover: c, cycling: d, wrap: e, startIndex: f};
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$State = F2(
+	function (a, b) {
+		return {ctor: 'State', _0: a, _1: b};
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$NotAnimating = {ctor: 'NotAnimating'};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$Animating = function (a) {
+	return {ctor: 'Animating', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$Start = function (a) {
+	return {ctor: 'Start', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$Number = function (a) {
+	return {ctor: 'Number', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$Prev = {ctor: 'Prev'};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$Next = {ctor: 'Next'};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$WaitForUser = {ctor: 'WaitForUser'};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$Active = {ctor: 'Active'};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$defaultStateOptions = {
+	interval: _elm_lang$core$Maybe$Just(5000),
+	keyboard: true,
+	pauseOnHover: true,
+	cycling: _rundis$elm_bootstrap$Bootstrap_Carousel$Active,
+	wrap: true,
+	startIndex: 0
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$Paused = {ctor: 'Paused'};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$update = F2(
+	function (message, _p11) {
+		var _p12 = _p11;
+		var _p22 = _p12._0;
+		var _p21 = _p12._1;
+		var _p20 = _p12._1.currentIndex;
+		var _p13 = message;
+		switch (_p13.ctor) {
+			case 'Pause':
+				return A2(
+					_rundis$elm_bootstrap$Bootstrap_Carousel$State,
+					_p22,
+					_elm_lang$core$Native_Utils.update(
+						_p21,
+						{cycling: _rundis$elm_bootstrap$Bootstrap_Carousel$Paused}));
+			case 'Cycle':
+				return A2(
+					_rundis$elm_bootstrap$Bootstrap_Carousel$State,
+					_p22,
+					_elm_lang$core$Native_Utils.update(
+						_p21,
+						{cycling: _rundis$elm_bootstrap$Bootstrap_Carousel$Active}));
+			case 'SetHover':
+				return A2(
+					_rundis$elm_bootstrap$Bootstrap_Carousel$State,
+					_p22,
+					_elm_lang$core$Native_Utils.update(
+						_p21,
+						{hovering: _p13._0}));
+			case 'StartTransition':
+				var _p16 = _p13._0;
+				var newSettings = function () {
+					var _p14 = _p21.cycling;
+					if (_p14.ctor === 'WaitForUser') {
+						return _elm_lang$core$Native_Utils.update(
+							_p21,
+							{cycling: _rundis$elm_bootstrap$Bootstrap_Carousel$Active});
+					} else {
+						return _p21;
+					}
+				}();
+				var _p15 = _p22;
+				if (_p15.ctor === 'NotAnimating') {
+					return (!_elm_lang$core$Native_Utils.eq(
+						A3(
+							_rundis$elm_bootstrap$Bootstrap_Carousel$nextIndex,
+							_rundis$elm_bootstrap$Bootstrap_Carousel$Start(_p16),
+							_p20,
+							_p12._1.size),
+						_p20)) ? A2(
+						_rundis$elm_bootstrap$Bootstrap_Carousel$State,
+						_rundis$elm_bootstrap$Bootstrap_Carousel$Start(_p16),
+						newSettings) : A2(_rundis$elm_bootstrap$Bootstrap_Carousel$State, _p22, newSettings);
+				} else {
+					return A2(_rundis$elm_bootstrap$Bootstrap_Carousel$State, _p22, newSettings);
+				}
+			case 'SetAnimating':
+				var _p17 = _p22;
+				switch (_p17.ctor) {
+					case 'NotAnimating':
+						return _p12;
+					case 'Start':
+						return A2(
+							_rundis$elm_bootstrap$Bootstrap_Carousel$State,
+							_rundis$elm_bootstrap$Bootstrap_Carousel$Animating(_p17._0),
+							_p21);
+					default:
+						return A2(
+							_rundis$elm_bootstrap$Bootstrap_Carousel$State,
+							_rundis$elm_bootstrap$Bootstrap_Carousel$Animating(_p17._0),
+							_p21);
+				}
+			default:
+				var _p19 = _p13._0;
+				var _p18 = _p22;
+				if (_p18.ctor === 'NotAnimating') {
+					return A2(
+						_rundis$elm_bootstrap$Bootstrap_Carousel$State,
+						_rundis$elm_bootstrap$Bootstrap_Carousel$NotAnimating,
+						_elm_lang$core$Native_Utils.update(
+							_p21,
+							{size: _p19}));
+				} else {
+					return A2(
+						_rundis$elm_bootstrap$Bootstrap_Carousel$State,
+						_rundis$elm_bootstrap$Bootstrap_Carousel$NotAnimating,
+						_elm_lang$core$Native_Utils.update(
+							_p21,
+							{
+								currentIndex: A3(_rundis$elm_bootstrap$Bootstrap_Carousel$nextIndex, _p22, _p20, _p19),
+								size: _p19
+							}));
+				}
+		}
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$IgnoreHover = {ctor: 'IgnoreHover'};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$NotHovered = {ctor: 'NotHovered'};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$initialStateWithOptions = function (options) {
+	return A2(
+		_rundis$elm_bootstrap$Bootstrap_Carousel$State,
+		_rundis$elm_bootstrap$Bootstrap_Carousel$NotAnimating,
+		{
+			currentIndex: options.startIndex,
+			interval: A2(_elm_lang$core$Maybe$withDefault, 0, options.interval),
+			cycling: options.cycling,
+			hovering: options.pauseOnHover ? _rundis$elm_bootstrap$Bootstrap_Carousel$NotHovered : _rundis$elm_bootstrap$Bootstrap_Carousel$IgnoreHover,
+			keyboard: options.keyboard,
+			wrap: options.wrap,
+			size: 2
+		});
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$initialState = _rundis$elm_bootstrap$Bootstrap_Carousel$initialStateWithOptions(_rundis$elm_bootstrap$Bootstrap_Carousel$defaultStateOptions);
+var _rundis$elm_bootstrap$Bootstrap_Carousel$Hovered = {ctor: 'Hovered'};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$SetHover = function (a) {
+	return {ctor: 'SetHover', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$EndTransition = function (a) {
+	return {ctor: 'EndTransition', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$dirtyHack = function (size) {
+	return A3(
+		_elm_lang$html$Html_Keyed$node,
+		'div',
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'dirtyHack',
+				_1: A2(
+					_elm_lang$html$Html$img,
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html_Events$on,
+							'load',
+							_elm_lang$core$Json_Decode$succeed(
+								_rundis$elm_bootstrap$Bootstrap_Carousel$EndTransition(size))),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$src('http://package.elm-lang.org/assets/favicon.ico'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$style(
+									{
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'display', _1: 'none'},
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{ctor: '[]'})
+			},
+			_1: {ctor: '[]'}
+		});
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$SetAnimating = {ctor: 'SetAnimating'};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$StartTransition = function (a) {
+	return {ctor: 'StartTransition', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$subscriptions = F2(
+	function (model, toMsg) {
+		var _p23 = model;
+		switch (_p23._0.ctor) {
+			case 'NotAnimating':
+				var _p25 = _p23._1.interval;
+				var atEnd = (!_p23._1.wrap) && _elm_lang$core$Native_Utils.eq(_p23._1.currentIndex, _p23._1.size - 1);
+				return (_elm_lang$core$Native_Utils.eq(_p23._1.cycling, _rundis$elm_bootstrap$Bootstrap_Carousel$Active) && ((!_elm_lang$core$Native_Utils.eq(_p23._1.hovering, _rundis$elm_bootstrap$Bootstrap_Carousel$Hovered)) && ((!_elm_lang$core$Native_Utils.eq(_p25, 0)) && (!atEnd)))) ? A2(
+					_elm_lang$core$Time$every,
+					_elm_lang$core$Basics$toFloat(_p25) * _elm_lang$core$Time$millisecond,
+					function (_p24) {
+						return toMsg(
+							_rundis$elm_bootstrap$Bootstrap_Carousel$StartTransition(_rundis$elm_bootstrap$Bootstrap_Carousel$Next));
+					}) : _elm_lang$core$Platform_Sub$none;
+			case 'Start':
+				return _elm_lang$animation_frame$AnimationFrame$times(
+					function (_p26) {
+						return toMsg(_rundis$elm_bootstrap$Bootstrap_Carousel$SetAnimating);
+					});
+			default:
+				return _elm_lang$core$Platform_Sub$none;
+		}
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$next = _rundis$elm_bootstrap$Bootstrap_Carousel$update(
+	_rundis$elm_bootstrap$Bootstrap_Carousel$StartTransition(_rundis$elm_bootstrap$Bootstrap_Carousel$Next));
+var _rundis$elm_bootstrap$Bootstrap_Carousel$prev = _rundis$elm_bootstrap$Bootstrap_Carousel$update(
+	_rundis$elm_bootstrap$Bootstrap_Carousel$StartTransition(_rundis$elm_bootstrap$Bootstrap_Carousel$Prev));
+var _rundis$elm_bootstrap$Bootstrap_Carousel$toSlide = function (n) {
+	return _rundis$elm_bootstrap$Bootstrap_Carousel$update(
+		_rundis$elm_bootstrap$Bootstrap_Carousel$StartTransition(
+			_rundis$elm_bootstrap$Bootstrap_Carousel$Number(n)));
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$controlPrev = A2(
+	_elm_lang$html$Html$a,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('carousel-control-prev'),
+		_1: {
+			ctor: '::',
+			_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'button'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(
+					_rundis$elm_bootstrap$Bootstrap_Carousel$StartTransition(_rundis$elm_bootstrap$Bootstrap_Carousel$Prev)),
+				_1: {ctor: '[]'}
+			}
+		}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$span,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('carousel-control-prev-icon'),
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-hidden', 'true'),
+					_1: {ctor: '[]'}
+				}
+			},
+			{ctor: '[]'}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$span,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('sr-only'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Previous'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		}
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$controlNext = A2(
+	_elm_lang$html$Html$a,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('carousel-control-next'),
+		_1: {
+			ctor: '::',
+			_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'button'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(
+					_rundis$elm_bootstrap$Bootstrap_Carousel$StartTransition(_rundis$elm_bootstrap$Bootstrap_Carousel$Next)),
+				_1: {ctor: '[]'}
+			}
+		}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$span,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('carousel-control-next-icon'),
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'aria-hidden', 'true'),
+					_1: {ctor: '[]'}
+				}
+			},
+			{ctor: '[]'}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$span,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('sr-only'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Next'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		}
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$indicators = F2(
+	function (size, activeIndex) {
+		var item = function (n) {
+			return A2(
+				_elm_lang$html$Html$li,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$classList(
+						{
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'active',
+								_1: _elm_lang$core$Native_Utils.eq(n, activeIndex)
+							},
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(
+							_rundis$elm_bootstrap$Bootstrap_Carousel$StartTransition(
+								_rundis$elm_bootstrap$Bootstrap_Carousel$Number(n))),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'});
+		};
+		var items = A2(
+			_elm_lang$core$List$map,
+			item,
+			A2(_elm_lang$core$List$range, 0, size - 1));
+		return A2(
+			_elm_lang$html$Html$ol,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('carousel-indicators'),
+				_1: {ctor: '[]'}
+			},
+			items);
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$view = F2(
+	function (_p28, _p27) {
+		var _p29 = _p28;
+		var _p32 = _p29._1.currentIndex;
+		var _p30 = _p27;
+		var _p31 = _p30._0;
+		var slidesHtml = A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('carousel-inner'),
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'role', 'listbox'),
+					_1: {ctor: '[]'}
+				}
+			},
+			A2(
+				_elm_lang$core$List$indexedMap,
+				_rundis$elm_bootstrap$Bootstrap_Carousel$viewSlide(_p29),
+				_p31.slides));
+		var size = _elm_lang$core$List$length(_p31.slides);
+		var indicatorsHtml = _p31.indicators ? A2(
+			_rundis$elm_bootstrap$Bootstrap_Carousel$indicators,
+			size,
+			A3(_rundis$elm_bootstrap$Bootstrap_Carousel$nextIndex, _p29._0, _p32, size)) : _elm_lang$html$Html$text('');
+		var controlsHtml = _p31.controls ? ((_p29._1.wrap || ((!_elm_lang$core$Native_Utils.eq(_p32, 0)) && (!_elm_lang$core$Native_Utils.eq(_p32, size - 1)))) ? {
+			ctor: '::',
+			_0: _rundis$elm_bootstrap$Bootstrap_Carousel$controlPrev,
+			_1: {
+				ctor: '::',
+				_0: _rundis$elm_bootstrap$Bootstrap_Carousel$controlNext,
+				_1: {ctor: '[]'}
+			}
+		} : (_elm_lang$core$Native_Utils.eq(_p32, 0) ? {
+			ctor: '::',
+			_0: _rundis$elm_bootstrap$Bootstrap_Carousel$controlNext,
+			_1: {ctor: '[]'}
+		} : {
+			ctor: '::',
+			_0: _rundis$elm_bootstrap$Bootstrap_Carousel$controlPrev,
+			_1: {ctor: '[]'}
+		})) : {ctor: '[]'};
+		var defaultCarouselAttributes = A2(
+			_elm_lang$core$Basics_ops['++'],
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('carousel slide'),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html_Events$on,
+						'transitionend',
+						_elm_lang$core$Json_Decode$succeed(
+							_p31.toMsg(
+								_rundis$elm_bootstrap$Bootstrap_Carousel$EndTransition(size)))),
+					_1: {ctor: '[]'}
+				}
+			},
+			(!_elm_lang$core$Native_Utils.eq(_p29._1.hovering, _rundis$elm_bootstrap$Bootstrap_Carousel$IgnoreHover)) ? {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onMouseEnter(
+					_p31.toMsg(
+						_rundis$elm_bootstrap$Bootstrap_Carousel$SetHover(_rundis$elm_bootstrap$Bootstrap_Carousel$Hovered))),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onMouseLeave(
+						_p31.toMsg(
+							_rundis$elm_bootstrap$Bootstrap_Carousel$SetHover(_rundis$elm_bootstrap$Bootstrap_Carousel$NotHovered))),
+					_1: {ctor: '[]'}
+				}
+			} : {ctor: '[]'});
+		return A2(
+			_elm_lang$html$Html$div,
+			A2(_elm_lang$core$Basics_ops['++'], _p31.attributes, defaultCarouselAttributes),
+			{
+				ctor: '::',
+				_0: slidesHtml,
+				_1: A2(
+					_elm_lang$core$List$map,
+					_elm_lang$html$Html$map(_p31.toMsg),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						{
+							ctor: '::',
+							_0: _rundis$elm_bootstrap$Bootstrap_Carousel$dirtyHack(size),
+							_1: {
+								ctor: '::',
+								_0: indicatorsHtml,
+								_1: {ctor: '[]'}
+							}
+						},
+						controlsHtml))
+			});
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$Pause = {ctor: 'Pause'};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$pause = _rundis$elm_bootstrap$Bootstrap_Carousel$update(_rundis$elm_bootstrap$Bootstrap_Carousel$Pause);
+var _rundis$elm_bootstrap$Bootstrap_Carousel$Cycle = {ctor: 'Cycle'};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$cycle = _rundis$elm_bootstrap$Bootstrap_Carousel$update(_rundis$elm_bootstrap$Bootstrap_Carousel$Cycle);
+var _rundis$elm_bootstrap$Bootstrap_Carousel$Config = function (a) {
+	return {ctor: 'Config', _0: a};
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$config = F2(
+	function (toMsg, attributes) {
+		return _rundis$elm_bootstrap$Bootstrap_Carousel$Config(
+			{
+				attributes: attributes,
+				toMsg: toMsg,
+				slides: {ctor: '[]'},
+				controls: false,
+				indicators: false
+			});
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$slides = F2(
+	function (newSlides, _p33) {
+		var _p34 = _p33;
+		return _rundis$elm_bootstrap$Bootstrap_Carousel$Config(
+			_elm_lang$core$Native_Utils.update(
+				_p34._0,
+				{slides: newSlides}));
+	});
+var _rundis$elm_bootstrap$Bootstrap_Carousel$withIndicators = function (_p35) {
+	var _p36 = _p35;
+	return _rundis$elm_bootstrap$Bootstrap_Carousel$Config(
+		_elm_lang$core$Native_Utils.update(
+			_p36._0,
+			{indicators: true}));
+};
+var _rundis$elm_bootstrap$Bootstrap_Carousel$withControls = function (_p37) {
+	var _p38 = _p37;
+	return _rundis$elm_bootstrap$Bootstrap_Carousel$Config(
+		_elm_lang$core$Native_Utils.update(
+			_p38._0,
+			{controls: true}));
 };
 var _Ludusamo$portfolio$Main$projectToDiv = function (project) {
 	return A2(
@@ -12605,10 +13525,40 @@ var _Ludusamo$portfolio$Main$projectToDiv = function (project) {
 			_1: {ctor: '[]'}
 		});
 };
-var _Ludusamo$portfolio$Main$Model = F5(
-	function (a, b, c, d, e) {
-		return {projects: a, pedestals: b, selectedProject: c, descriptionState: d, projectDescriptions: e};
+var _Ludusamo$portfolio$Main$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {projects: a, pedestals: b, selectedProject: c, descriptionState: d, projectCarousel: e, projectDescriptions: f};
 	});
+var _Ludusamo$portfolio$Main$CarouselMsg = function (a) {
+	return {ctor: 'CarouselMsg', _0: a};
+};
+var _Ludusamo$portfolio$Main$projectCarousel = function (model) {
+	return A2(
+		_rundis$elm_bootstrap$Bootstrap_Carousel$view,
+		model.projectCarousel,
+		A2(
+			_rundis$elm_bootstrap$Bootstrap_Carousel$slides,
+			A2(
+				_elm_lang$core$List$map,
+				function (imgLink) {
+					return A2(
+						_rundis$elm_bootstrap$Bootstrap_Carousel_Slide$config,
+						{ctor: '[]'},
+						A2(
+							_rundis$elm_bootstrap$Bootstrap_Carousel_Slide$image,
+							{ctor: '[]'},
+							imgLink));
+				},
+				model.selectedProject.carousel),
+			_rundis$elm_bootstrap$Bootstrap_Carousel$withIndicators(
+				A2(
+					_rundis$elm_bootstrap$Bootstrap_Carousel$config,
+					_Ludusamo$portfolio$Main$CarouselMsg,
+					{ctor: '[]'}))));
+};
+var _Ludusamo$portfolio$Main$subscriptions = function (model) {
+	return A2(_rundis$elm_bootstrap$Bootstrap_Carousel$subscriptions, model.projectCarousel, _Ludusamo$portfolio$Main$CarouselMsg);
+};
 var _Ludusamo$portfolio$Main$ModalMsg = function (a) {
 	return {ctor: 'ModalMsg', _0: a};
 };
@@ -12617,38 +13567,12 @@ var _Ludusamo$portfolio$Main$descriptionModal = function (model) {
 		_rundis$elm_bootstrap$Bootstrap_Modal$view,
 		model.descriptionState,
 		A3(
-			_rundis$elm_bootstrap$Bootstrap_Modal$footer,
+			_rundis$elm_bootstrap$Bootstrap_Modal$body,
 			{ctor: '[]'},
 			{
 				ctor: '::',
-				_0: A2(
-					_rundis$elm_bootstrap$Bootstrap_Button$button,
-					{
-						ctor: '::',
-						_0: _rundis$elm_bootstrap$Bootstrap_Button$outlinePrimary,
-						_1: {
-							ctor: '::',
-							_0: _rundis$elm_bootstrap$Bootstrap_Button$attrs(
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onClick(
-										_Ludusamo$portfolio$Main$ModalMsg(_rundis$elm_bootstrap$Bootstrap_Modal$hiddenState)),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Close'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			},
-			A3(
-				_rundis$elm_bootstrap$Bootstrap_Modal$body,
-				{ctor: '[]'},
-				{
+				_0: _Ludusamo$portfolio$Main$projectCarousel(model),
+				_1: {
 					ctor: '::',
 					_0: function () {
 						var description = A2(
@@ -12661,17 +13585,18 @@ var _Ludusamo$portfolio$Main$descriptionModal = function (model) {
 						return description;
 					}(),
 					_1: {ctor: '[]'}
+				}
+			},
+			A3(
+				_rundis$elm_bootstrap$Bootstrap_Modal$h5,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(model.selectedProject.name),
+					_1: {ctor: '[]'}
 				},
-				A3(
-					_rundis$elm_bootstrap$Bootstrap_Modal$h5,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(model.selectedProject.name),
-						_1: {ctor: '[]'}
-					},
-					_rundis$elm_bootstrap$Bootstrap_Modal$large(
-						_rundis$elm_bootstrap$Bootstrap_Modal$config(_Ludusamo$portfolio$Main$ModalMsg))))));
+				_rundis$elm_bootstrap$Bootstrap_Modal$large(
+					_rundis$elm_bootstrap$Bootstrap_Modal$config(_Ludusamo$portfolio$Main$ModalMsg)))));
 };
 var _Ludusamo$portfolio$Main$PedestalClick = function (a) {
 	return {ctor: 'PedestalClick', _0: a};
@@ -12895,16 +13820,26 @@ var _Ludusamo$portfolio$Main$update = F2(
 					var _v3 = _Ludusamo$portfolio$Main$ModalMsg(_rundis$elm_bootstrap$Bootstrap_Modal$visibleState),
 						_v4 = _elm_lang$core$Native_Utils.update(
 						model,
-						{selectedProject: _p0._0.project});
+						{selectedProject: _p0._0.project, projectCarousel: _rundis$elm_bootstrap$Bootstrap_Carousel$initialState});
 					msg = _v3;
 					model = _v4;
 					continue update;
-				default:
+				case 'ModalMsg':
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
 							{descriptionState: _p0._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				default:
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								projectCarousel: A2(_rundis$elm_bootstrap$Bootstrap_Carousel$update, _p0._0, model.projectCarousel)
+							}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 			}
@@ -12916,12 +13851,13 @@ var _Ludusamo$portfolio$Main$LoadingProjects = function (a) {
 var _Ludusamo$portfolio$Main$getProjects = A2(_elm_lang$http$Http$send, _Ludusamo$portfolio$Main$LoadingProjects, _Ludusamo$portfolio$HttpRequest$getProjectConfig);
 var _Ludusamo$portfolio$Main$init = {
 	ctor: '_Tuple2',
-	_0: A5(
+	_0: A6(
 		_Ludusamo$portfolio$Main$Model,
 		{ctor: '[]'},
 		{ctor: '[]'},
 		_Ludusamo$portfolio$Pedestal$emptyProject,
 		_rundis$elm_bootstrap$Bootstrap_Modal$hiddenState,
+		_rundis$elm_bootstrap$Bootstrap_Carousel$initialState,
 		_elm_lang$core$Dict$empty),
 	_1: _Ludusamo$portfolio$Main$getProjects
 };
